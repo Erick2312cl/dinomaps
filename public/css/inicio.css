@@ -1,0 +1,28 @@
+:root {
+    font-family: "Istok Web", system-ui, sans-serif;
+    color: #172d21;
+    background: #f0f5ee;
+}
+
+body {
+    margin: 0;
+    padding: clamp(24px, 8vw, 100px);
+}
+
+main {
+    max-width: 38rem;
+    padding: clamp(24px, 5vw, 56px);
+    border-radius: 24px;
+    background: #2f4837;
+    color: #fff;
+}
+
+h1 {
+    margin: 0;
+    font-family: Jaro, system-ui, sans-serif;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+}
+
+p {
+    margin: 0.5rem 0 0;
+}
