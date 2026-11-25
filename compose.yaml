@@ -3,7 +3,7 @@ services:
     build: .
     ports:
       - "127.0.0.1:${DINOMAPS_PORT:-8000}:8000"
-    environment:
+    environment: &app-environment
       COMPOSER_ALLOW_SUPERUSER: "1"
       DB_CONNECTION: mysql
       DB_HOST: db
@@ -25,9 +25,30 @@ services:
         composer install --no-interaction
         if ! grep -q '^APP_KEY=base64:.' .env; then php artisan key:generate --force; fi
         php artisan migrate --force
-        exec php artisan serve --host=0.0.0.0 --port=8000
+        # Keep Docker environment variables in the web server process.
+        exec php artisan serve --host=0.0.0.0 --port=8000 --no-reload
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(@file_get_contents('http://127.0.0.1:8000/up') === false ? 1 : 0);"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 60s
+  scheduler:
+    build: .
+    environment: *app-environment
+    volumes:
+      - .:/app
+      - vendor:/app/vendor
+      - bootstrap-cache:/app/bootstrap/cache
+    depends_on:
+      app:
+        condition: service_healthy
+    command: ["php", "artisan", "schedule:work"]
+    restart: unless-stopped
   db:
     image: mariadb:11.4
+    ports:
+      - "127.0.0.1:3307:3306"
     environment:
       MARIADB_RANDOM_ROOT_PASSWORD: "1"
       MARIADB_DATABASE: ${DINOMAPS_DB_NAME:-dinomaps}
