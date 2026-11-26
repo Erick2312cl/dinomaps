@@ -36,7 +36,7 @@ El registro crea cuentas comunes. Para habilitar a una cuenta existente, usá el
 
 ## AJAX y librerías
 
-- El navegador usa fetch para pedir GET /mapa/puntos. Laravel valida filtros, consulta Eloquent y responde JSON. Leaflet dibuja los puntos sin recargar la página y la interfaz informa si falla la carga. Los filtros de tránsito ofrecen otro ejemplo de actualización asíncrona.
+- El navegador usa `fetch` para pedir `GET /mapa/puntos`. Laravel valida filtros, consulta Eloquent y responde JSON. Leaflet dibuja los puntos sin recargar la página y la interfaz informa si falla la carga. Tránsito consulta `GET /api/reports` al abrir y cada 30 segundos mientras la pestaña está visible. Los filtros redibujan la capa con los avisos ya cargados.
 - Leaflet 1.9.4 controla el mapa, los marcadores y la interacción. MapLibre GL JS 6.3.0 y su adaptador integran la cartografía vectorial de OpenFreeMap.
 - Chart.js 4.4.9 dibuja gráficos de barras y circulares con el conteo de usuarios que dieron cada puntuación, a partir de las reseñas almacenadas. Hay una tabla accesible con los mismos datos.
 
@@ -50,3 +50,7 @@ docker compose exec app php artisan migrate --seed
 ~~~
 
 Abrí http://127.0.0.1:8000. Usá /up para verificar que Laravel responde. El mapa y el gráfico usan dependencias de CDN. El recorrido interno es opcional y requiere configurar GEOAPIFY_API_KEY del lado servidor. El enlace externo de indicaciones sigue disponible.
+
+## Alcance
+
+El CRUD completo corresponde al catálogo de lugares. Las reseñas se pueden publicar y votar. Los avisos se pueden publicar, confirmar y retirar por su autor. Los avisos de tránsito se basan en aportes de la comunidad.

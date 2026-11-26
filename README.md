@@ -1,6 +1,10 @@
 # DinoMaps
 
-Mapa urbano colaborativo de Neuquén. Proyecto de Programación Web Dinámica de la UNCo.
+Mapa urbano colaborativo de Neuquén capital. Trabajo final de Programación Web Dinámica, Universidad Nacional del Comahue.
+
+**Integrantes:** Erick Clavería, Martín Massimino, Bruno Carrera y Fernando Liozzi.
+
+La [documentación de entrega](docs/entrega/README_ENTREGA.md) describe las funcionalidades, el modelo de datos, los permisos y la integración de AJAX y las librerías externas.
 
 ## Desarrollo con Docker
 
@@ -66,10 +70,3 @@ docker compose exec app php artisan dinomaps:administrador admin@example.com
 ```
 
 Desde **Cuenta → Gestionar lugares**, el administrador puede agregar, editar y archivar lugares. El archivado oculta el lugar y conserva sus reseñas. Repetir el seeder agrega lugares nuevos y preserva los lugares editados o archivados.
-
-## Documentación del equipo
-
-- [Entrega final de Programación Web Dinámica](docs/entrega/README_ENTREGA.md)
-- [Estado del desarrollo](docs/CURRENT_STATE.md)
-- [Guía para la defensa](docs/DEFENSA.md)
-- [Prototipo de DinoMaps en Figma](https://www.figma.com/design/3RywgJEOTOEOTCVz3VqsKs/DinoMaps?node-id=1478-547)
