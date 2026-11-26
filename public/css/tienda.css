@@ -23,25 +23,18 @@
 
 .tienda-canje-resumen {
     display: grid;
-    grid-template-columns: clamp(68px, 26vw, 110px) minmax(0, 1fr);
+    grid-template-columns: var(--tamano-dino-tienda) minmax(0, 1fr);
     gap: clamp(12px, 4vw, 24px);
     align-items: center;
-    min-height: 112px;
     margin-block: 16px 24px;
 }
 
 .tienda-canje-arte {
-    display: grid;
-    place-items: center;
-    aspect-ratio: 1;
-    color: #476354;
+    margin-block-end: 0;
     font-size: .85rem;
-    text-align: center;
 }
 
-.tienda-canje-arte img { width: 100%; height: 100%; object-fit: contain; }
-.tienda-canje-arte [hidden] { display: none; }
-.tienda-canje-nombre { font-size: 1.2rem; font-weight: 700; }
+.tienda-canje-nombre { font-size: 1.2rem; font-weight: 700; overflow-wrap: anywhere; }
 .tienda-canje-costo { margin-top: 6px; color: #476354; }
 
 .tienda-canje-acciones {

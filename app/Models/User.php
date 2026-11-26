@@ -25,6 +25,21 @@ class User extends Authenticatable
         return $this->belongsToMany(Dinosaur::class);
     }
 
+    public function dinosaurRank(): string
+    {
+        $ranks = [
+            'Dino Explorador',
+            'Dino Turista',
+            'Dino Activo',
+            'Dino Conocedor',
+            'Dino Experto',
+            'Dino Leyenda',
+        ];
+        $unlocked = $this->dinosaurs()->where('dinosaurs.is_starter', false)->count();
+
+        return $ranks[min(intdiv($unlocked, 3), count($ranks) - 1)];
+    }
+
     protected $fillable = [
         'name',
         'email',

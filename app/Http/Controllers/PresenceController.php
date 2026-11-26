@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CompartirUbicacionRequest;
 use App\Models\Dinosaur;
 use App\Models\UserPresence;
 use Illuminate\Http\JsonResponse;
@@ -15,25 +16,18 @@ class PresenceController
         return $this->nearby($request->user()->getKey());
     }
 
-    public function update(Request $request): JsonResponse
+    public function update(CompartirUbicacionRequest $request): JsonResponse
     {
-        $position = $request->validate([
-            'latitude' => ['required', 'numeric', 'between:-90,90'],
-            'longitude' => ['required', 'numeric', 'between:-180,180'],
-        ]);
+        $position = $request->validated();
+        $user = $request->user();
+        $shared = UserPresence::share(
+            $user, (float) $position['latitude'], (float) $position['longitude'], $request->boolean('renew'),
+        );
+        if (! $shared) {
+            return $this->positions(null, [], 410);
+        }
 
-        $userId = $request->user()->getKey();
-        $now = now();
-
-        UserPresence::query()->where('expires_at', '<=', $now)->delete();
-        UserPresence::query()->upsert([[
-            'user_id' => $userId,
-            'latitude' => round((float) $position['latitude'], 3),
-            'longitude' => round((float) $position['longitude'], 3),
-            'expires_at' => $now->addMinutes(3),
-        ]], ['user_id'], ['latitude', 'longitude', 'expires_at']);
-
-        return $this->nearby($userId);
+        return $this->nearby($user->getKey());
     }
 
     public function destroy(Request $request): Response
@@ -45,31 +39,40 @@ class PresenceController
 
     private function nearby(int $userId): JsonResponse
     {
-        $active = UserPresence::query()->where('expires_at', '>', now());
+        $active = UserPresence::visible()
+            ->with('user:id,name,equipped_dinosaur_id', 'user.equippedDinosaur:id,image_path');
         $viewer = (clone $active)->find($userId);
-
         if ($viewer === null) {
-            return response()->json(['data' => [], 'sharing' => false], 200, ['Cache-Control' => 'private, no-store']);
+            return $this->positions(null, []);
         }
 
-        $latitudeRange = 8 / 111;
-        $longitudeRange = $latitudeRange / max(0.01, cos(deg2rad($viewer->latitude)));
-        $neighbors = $active->whereKeyNot($userId)
-            ->whereBetween('latitude', [$viewer->latitude - $latitudeRange, $viewer->latitude + $latitudeRange])
-            ->whereBetween('longitude', [$viewer->longitude - $longitudeRange, $viewer->longitude + $longitudeRange])
-            ->with('user:id,equipped_dinosaur_id', 'user.equippedDinosaur:id,image_path')
-            ->latest('expires_at')->orderBy('user_id')->limit(30)->get();
-
+        $neighbors = $active->near($viewer)->latest('expires_at')->orderBy('user_id')->limit(30)->get();
         $starter = Dinosaur::query()->where('is_starter', true)->orderBy('sort_order')->value('image_path');
-        $data = $neighbors->map(fn (UserPresence $neighbor) => [
-            'latitude' => $neighbor->latitude,
-            'longitude' => $neighbor->longitude,
-            'avatar' => $this->avatar($neighbor->user?->equippedDinosaur?->image_path)
-                ?? $this->avatar($starter)
-                ?? asset('images/dinomaps/dino-1.webp'),
-        ]);
+        $defaultAvatar = $this->avatar($starter) ?? asset('images/dinomaps/dino-3.webp');
 
-        return response()->json(['data' => $data, 'sharing' => true], 200, ['Cache-Control' => 'private, no-store']);
+        return $this->positions(
+            $this->marker($viewer, $defaultAvatar),
+            $neighbors->map(fn (UserPresence $neighbor) => $this->marker($neighbor, $defaultAvatar))->all(),
+        );
+    }
+
+    private function positions(?array $own, array $neighbors, int $status = 200): JsonResponse
+    {
+        return response()->json([
+            'own' => $own,
+            'data' => $neighbors,
+            'sharing' => $own !== null,
+        ], $status, ['Cache-Control' => 'private, no-store']);
+    }
+
+    private function marker(UserPresence $presence, string $defaultAvatar): array
+    {
+        return [
+            'name' => $presence->user->name,
+            'latitude' => $presence->latitude,
+            'longitude' => $presence->longitude,
+            'avatar' => $this->avatar($presence->user->equippedDinosaur?->image_path) ?? $defaultAvatar,
+        ];
     }
 
     private function avatar(?string $path): ?string

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Dinosaur;
 use App\Models\TrafficReport;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -17,10 +16,7 @@ class AccountAccessibilityController
     {
         $user = $request->user();
         $reportCount = TrafficReport::query()->where('user_id', $user->getKey())->count();
-        $equipped = $user->equippedDinosaur
-            ?? Dinosaur::query()->where('is_starter', true)->first();
-
-        return view('cuenta.index', compact('user', 'reportCount', 'equipped'));
+        return view('cuenta.index', compact('user', 'reportCount'));
     }
 
     public function showSettings(): View

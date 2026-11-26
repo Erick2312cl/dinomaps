@@ -113,6 +113,36 @@ class EntregaDinoMapsTest extends TestCase
         $this->assertSame(0, (int) $user->refresh()->points);
     }
 
+    public function test_el_rango_del_perfil_avanza_por_cada_tres_canjes(): void
+    {
+        $user = $this->usuario();
+        $inicial = Dinosaur::where('is_starter', true)->firstOrFail();
+        $dinosaurios = Dinosaur::where('is_starter', false)->orderBy('sort_order')->get();
+        $this->actingAs($user);
+        $user->dinosaurs()->attach($inicial);
+        $this->get(route('cuenta.index'))->assertOk()->assertSeeText('Dino Explorador');
+
+        $rangos = [
+            2 => 'Dino Explorador',
+            3 => 'Dino Turista',
+            5 => 'Dino Turista',
+            6 => 'Dino Activo',
+            9 => 'Dino Conocedor',
+            12 => 'Dino Experto',
+            15 => 'Dino Leyenda',
+        ];
+        foreach ($dinosaurios as $index => $dinosaurio) {
+            $user->dinosaurs()->attach($dinosaurio);
+            if (isset($rangos[$index + 1])) {
+                $this->assertSame($rangos[$index + 1], $user->dinosaurRank());
+            }
+        }
+
+        $this->post(route('shop.equip', $inicial))->assertSessionHasNoErrors();
+        $this->get(route('cuenta.index'))->assertOk()->assertSeeText('Dino Leyenda');
+        $this->get(route('inicio'))->assertOk()->assertSeeText('Dino Leyenda');
+    }
+
     private function usuario(): User
     {
         return User::create([

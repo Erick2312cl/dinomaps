@@ -16,8 +16,8 @@
         <p>{{ $lugar->tipo }}</p>
         <h1>{{ $lugar->nombre }}</h1>
         <p>{{ $lugar->direccion }} · Neuquén capital</p>
+        @include('lugares.fotos')
         @if ($lugar->categoria->slug === 'turismo')
-            @include('lugares.turismo-fotos')
             @if ($lugar->descripcion)
                 <p>{{ $lugar->descripcion }}</p>
             @endif
@@ -80,10 +80,19 @@
             <section class="ficha estadisticas">
                 <h2>Calificaciones</h2>
                 <p>{{ number_format($promedio, 1, ',', '.') }} de 5 · {{ $totalResenas }} {{ $totalResenas === 1 ? 'reseña' : 'reseñas' }}</p>
-                <canvas id="grafico-resenas" data-valores="{{ json_encode(array_values($distribucion)) }}" aria-hidden="true"></canvas>
+                <label class="tipo-grafico" for="tipo-grafico-resenas" hidden>
+                    Tipo de gráfico
+                    <select id="tipo-grafico-resenas" aria-controls="grafico-resenas">
+                        <option value="bar">Barras</option>
+                        <option value="pie">Circular</option>
+                    </select>
+                </label>
+                <div class="contenedor-grafico" hidden>
+                    <canvas id="grafico-resenas" data-valores="{{ json_encode(array_values($distribucion)) }}" aria-hidden="true"></canvas>
+                </div>
                 <table>
                     <caption>Distribución de calificaciones</caption>
-                    <thead><tr><th scope="col">Estrellas</th><th scope="col">Reseñas</th></tr></thead>
+                    <thead><tr><th scope="col">Estrellas</th><th scope="col">Usuarios</th></tr></thead>
                     <tbody>
                     @foreach ($distribucion as $estrellas => $cantidad)
                         <tr><th scope="row">{{ $estrellas }} ★</th><td>{{ $cantidad }}</td></tr>

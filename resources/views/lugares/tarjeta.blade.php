@@ -1,4 +1,4 @@
-@php($fotos = config('dinomaps.lugares.'.$lugar->slug, []))
+@php($fotos = $lugar->fotos())
 @php($enTurismo = ($filtros['categoria'] ?? null) === 'turismo')
 <article class="tarjeta">
     <small>{{ $enTurismo ? ($lugar->actividad?->etiqueta() ?? $lugar->tipo) : $lugar->tipo }}</small>
@@ -12,8 +12,8 @@
                 @foreach ($fotos as $foto)
                     <img src="{{ asset('images/dinomaps/lugares/'.$foto.'.webp') }}" alt="" loading="lazy">
                 @endforeach
-                @if (in_array($lugar->slug, config('dinomaps.fotos_de_referencia'), true))
-                    <span class="foto-referencia">Foto de referencia</span>
+                @if ($lugar->tieneFotoDeReferencia())
+                    <span class="foto-referencia">Imagen de referencia</span>
                 @endif
             </div>
         @endif

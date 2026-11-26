@@ -47,6 +47,20 @@ class Lugar extends Model
         return 'slug';
     }
 
+    public function fotos(): array
+    {
+        $fotos = config('dinomaps.lugares.'.$this->slug);
+        $referencia = config('dinomaps.foto_por_categoria.'.$this->categoria->slug);
+
+        return $fotos ?? ($referencia ? [$referencia] : []);
+    }
+
+    public function tieneFotoDeReferencia(): bool
+    {
+        return ! config('dinomaps.lugares.'.$this->slug)
+            || in_array($this->slug, config('dinomaps.fotos_de_referencia'), true);
+    }
+
     #[Scope]
     protected function filtrar(Builder $query, ?string $categoria, string $busqueda, ?string $actividad = null): void
     {

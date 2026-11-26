@@ -69,6 +69,7 @@ Desde **Cuenta → Gestionar lugares**, el administrador puede agregar, editar y
 
 ## Documentación del equipo
 
+- [Entrega final de Programación Web Dinámica](docs/entrega/README_ENTREGA.md)
 - [Estado del desarrollo](docs/CURRENT_STATE.md)
 - [Guía para la defensa](docs/DEFENSA.md)
 - [Prototipo de DinoMaps en Figma](https://www.figma.com/design/3RywgJEOTOEOTCVz3VqsKs/DinoMaps?node-id=1478-547)

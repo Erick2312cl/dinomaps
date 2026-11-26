@@ -1,9 +1,12 @@
-@php($fotosTurismo = config('dinomaps.lugares.'.$lugar->slug, []))
-@if ($fotosTurismo)
-    <div class="fotos-turismo">
-        @foreach (array_slice($fotosTurismo, 0, ($soloPortadaTurismo ?? false) ? 1 : 3) as $foto)
+@php($fotos = $lugar->fotos())
+@if ($fotos)
+    <div class="fotos-lugar">
+        @foreach (array_slice($fotos, 0, ($soloPortada ?? false) ? 1 : 3) as $foto)
             <img src="{{ asset('images/dinomaps/lugares/'.$foto.'.webp') }}" alt="" loading="lazy">
         @endforeach
+        @if ($lugar->tieneFotoDeReferencia())
+            <span class="foto-referencia">Imagen de referencia</span>
+        @endif
     </div>
 @else
     <div class="foto-turismo-vacia" aria-label="Sin fotos disponibles" role="img">

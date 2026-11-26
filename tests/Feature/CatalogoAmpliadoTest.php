@@ -53,10 +53,11 @@ class CatalogoAmpliadoTest extends TestCase
         }
     }
 
-    public function test_las_siete_categorias_tienen_lugares_y_marcadores_con_fichas(): void
+    public function test_las_ocho_categorias_tienen_lugares_y_marcadores_con_fichas(): void
     {
         $categorias = Categoria::all();
-        $this->assertCount(7, $categorias);
+        $this->assertCount(8, $categorias);
+        $this->assertTrue($categorias->contains('slug', 'bancos'));
 
         foreach ($categorias as $categoria) {
             $this->assertGreaterThanOrEqual(3, Lugar::whereBelongsTo($categoria, 'categoria')->count());

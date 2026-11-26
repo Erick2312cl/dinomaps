@@ -13,7 +13,14 @@ class ShopController
 {
     public function index(Request $request): View
     {
-        return view('shop.index', $this->catalog($request->user()));
+        $catalog = $this->catalog($request->user());
+        $slug = $request->query('canjear');
+        $producto = is_string($slug) ? $catalog['dinosaurs']->firstWhere('slug', $slug) : null;
+        $catalog['dinosaurParaConfirmar'] = $producto
+            && ! in_array($producto->id, $catalog['ownedIds'], true)
+            && $catalog['points'] >= $producto->price ? $producto : null;
+
+        return view('shop.index', $catalog);
     }
 
     public function collection(Request $request): View

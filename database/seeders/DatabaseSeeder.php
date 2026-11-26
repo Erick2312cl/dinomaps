@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
                 'turismo' => 'Turismo',
                 'transporte' => 'Transporte',
                 'restaurantes' => 'Restaurantes',
+                'bancos' => 'Bancos',
             ];
 
             $ids = [];
@@ -55,6 +56,11 @@ class DatabaseSeeder extends Seeder
                 ['transporte', 'aeropuerto-presidente-peron', 'Aeropuerto Internacional Presidente Perón', 'San Martín 5901', 'Terminal aeroportuaria', 'https://www.argentina.gob.ar/sites/default/files/2023/05/iet-nqn_2013.pdf', -38.95211, -68.1402, 'https://mapcarta.com/es/W143946526'],
                 ['restaurantes', 'estacion-q', 'Estación Q', 'Juan Bautista Alberdi 297', 'Restaurante', 'https://mapcarta.com/es/W1224670532', -38.95306, -68.05509, 'https://mapcarta.com/es/W1224670532'],
                 ['restaurantes', 'la-nonna-francesca', 'La Nonna Francesca', 'Diagonal 9 de Julio 56', 'Restaurante', 'https://mapcarta.com/es/W1108102190', -38.95039, -68.06018, 'https://mapcarta.com/es/W1108102190'],
+                ['restaurantes', 'atu-sushi-cuisine', 'Atu Sushi & Cuisine', 'Hipólito Yrigoyen 379', 'Restaurante de sushi', 'https://mapcarta.com/W1181061884', -38.95106, -68.06055, 'https://mapcarta.com/W1181061884'],
+                ['restaurantes', 'reymon-grill', 'Reymon Grill', 'Félix San Martín 890', 'Parrilla', 'https://mapcarta.com/W1073447157', -38.95915, -68.04695, 'https://mapcarta.com/W1073447157'],
+                ['bancos', 'nacion-empresas-neuquen', 'Nación Empresas · Neuquén', 'Santa Fe 182', 'Sucursal bancaria', 'https://mapcarta.com/N7626974059', -38.95315, -68.05638, 'https://mapcarta.com/N7626974059'],
+                ['bancos', 'bbva-neuquen', 'BBVA · Neuquén', 'Av. Argentina 157', 'Sucursal bancaria', 'https://mapcarta.com/N3703967340', -38.95341, -68.05888, 'https://mapcarta.com/N3703967340'],
+                ['bancos', 'bpn-jubilados', 'BPN · Banca Jubilados', 'Av. Argentina 57', 'Sucursal bancaria', 'https://mapcarta.com/W1279777940', -38.95443, -68.05865, 'https://mapcarta.com/W1279777940'],
                 ['turismo', 'circuito-blanco-bardas-norte', 'Circuito Blanco Bardas Norte', 'Parque del Observatorio sobre Jesús María', 'Circuito de running', 'https://www.rionegro.com.ar/estar-bien/parque-norte-y-el-circuito-perfecto-de-running-en-las-bardas-de-neuquen-4238013/', -38.93552, -68.06363, 'https://mapcarta.com/es/W738098888',
                     ActividadTurismo::Running, ['distancia' => '7,6 km', 'dificultad' => 'Moderada'], 'El marcador ubica el Observatorio como referencia. El circuito comienza en el estacionamiento del parque.'],
                 ['turismo', 'senderismo-paseo-de-la-costa', 'Paseo de la Costa', 'Costanera del río Limay, Neuquén', 'Senderismo urbano', 'https://www.lmneuquen.com/neuquen/neuquen-capital-nacional-del-senderismo-urbano-una-ciudad-disfrutar-ecosistemas-unicos-n1210745/amp', -38.97564, -68.05103, 'https://mapcarta.com/N4173747589',

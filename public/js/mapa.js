@@ -4,6 +4,7 @@ import { leerPreferencia } from './configuracion.js';
 import { aplicarPaletaDinoMaps } from './estilo-mapa.js';
 import { iniciarTransito } from './transito.js';
 import { iniciarSelectorMapa } from './tipo-mapa.js';
+import { iniciarUsuariosDemo } from './usuarios-demo.js';
 
 let L;
 
@@ -51,7 +52,7 @@ async function iniciarMapa() {
 
     const iconos = contenedor.dataset.iconos;
     const muestra = document.getElementById('usuarios-demo');
-    if (muestra) iniciarUsuariosDemo(mapa, muestra, iconos);
+    if (muestra) iniciarUsuariosDemo(mapa, L, muestra, iconos);
     iniciarPresencia(mapa, L, contenedor);
     iniciarRecorrido(mapa, L);
 
@@ -74,14 +75,17 @@ async function iniciarMapa() {
             ficha.href = lugar.ficha;
             ficha.textContent = lugar.nombre;
             const contenido = document.createElement('img');
-            const categoria = ['hoteles', 'museos', 'farmacias', 'cajeros', 'turismo', 'transporte', 'restaurantes'].includes(lugar.categoria)
+            const categoria = ['hoteles', 'museos', 'farmacias', 'cajeros', 'bancos', 'turismo', 'transporte', 'restaurantes'].includes(lugar.categoria)
                 ? lugar.categoria
                 : null;
             contenido.src = categoria ? iconos + '/categorias/' + categoria + '.svg' : iconos + '/dino-2.webp';
             contenido.alt = '';
+            const pin = document.createElement('span');
+            pin.className = 'pin-lugar';
+            pin.append(contenido);
             const icon = L.divIcon({
                 className: 'marcador-lugar marcador-lugar--' + (categoria ?? 'general'),
-                html: contenido,
+                html: pin,
                 iconSize: [31, 31],
                 iconAnchor: [15, 30],
                 popupAnchor: [0, -29],
@@ -90,6 +94,8 @@ async function iniciarMapa() {
             const marcador = L.marker([lugar.latitud, lugar.longitud], { icon, title: etiqueta })
                 .bindPopup(ficha);
             marcador.on('add', () => marcador.getElement().setAttribute('aria-label', etiqueta));
+            marcador.on('popupopen', () => marcador.getElement().classList.add('marcador-lugar-activo'));
+            marcador.on('popupclose', () => marcador.getElement()?.classList.remove('marcador-lugar-activo'));
             if (!ocultarLugares) marcador.addTo(mapa);
             marcadores.set(lugar.slug, marcador);
         }
@@ -194,37 +200,6 @@ function iniciarCartografia(mapa) {
         capa?.remove();
         capa = null;
     };
-}
-
-function iniciarUsuariosDemo(mapa, boton, iconos) {
-    const caminando = L.icon({ iconUrl: iconos + '/dino-1.webp', iconSize: [19, 22] });
-    const corriendo = L.icon({ iconUrl: iconos + '/dino-5.webp', iconSize: [20, 22] });
-    const auto = L.icon({ iconUrl: iconos + '/dino-7.webp', iconSize: [28, 23] });
-    const posiciones = [
-        [-38.9508, -68.074, caminando],
-        [-38.9622, -68.057, caminando],
-        [-38.9635, -68.034, corriendo],
-        [-38.9738, -68.063, corriendo],
-        [-38.9564, -68.074, auto],
-        [-38.9561, -68.049, auto],
-        [-38.9604, -68.019, auto],
-    ];
-    const avatares = L.layerGroup(posiciones.map(([latitud, longitud, icon]) =>
-        L.marker([latitud, longitud], { icon, alt: 'Usuario de demostración' })
-            .bindTooltip('Usuario de demostración')));
-
-    boton.disabled = false;
-    if (boton.dataset.mostrar === 'true' && leerPreferencia('dinomaps-avatares') === 'mostrar') {
-        avatares.addTo(mapa);
-        boton.setAttribute('aria-pressed', 'true');
-    }
-
-    boton.addEventListener('click', () => {
-        const activar = !mapa.hasLayer(avatares);
-        if (activar) avatares.addTo(mapa);
-        else avatares.remove();
-        boton.setAttribute('aria-pressed', String(activar));
-    });
 }
 
 iniciarMapa();

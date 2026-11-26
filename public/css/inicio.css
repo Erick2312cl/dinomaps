@@ -187,9 +187,13 @@ button:disabled { cursor: default; opacity: .62; }
 .perfil button { margin-top: 12px; border: 0; border-radius: 12px; background: #c5d9c8; padding: .4rem .75rem; }
 
 .explorar {
+    --panel-minimo: 240px;
+    --panel-maximo: 640px;
+    --mapa-minimo: 340px;
+    --ancho-panel-actual: clamp(var(--panel-minimo), var(--ancho-panel, clamp(300px, 22.3%, 428px)), min(var(--panel-maximo), 100% - var(--mapa-minimo)));
     position: relative;
     display: grid;
-    grid-template-columns: clamp(300px, 22.3%, 428px) minmax(0, 1fr);
+    grid-template-columns: var(--ancho-panel-actual) minmax(0, 1fr);
     grid-template-rows: auto minmax(0, 1fr);
     height: calc(100dvh - var(--alto-barra));
     min-height: 510px;
@@ -240,9 +244,38 @@ button:disabled { cursor: default; opacity: .62; }
     display: flex;
     flex-direction: column;
     min-height: 0;
+    min-width: 0;
+    container-type: inline-size;
     background: #fffffff2;
     border-radius: 0 14px 14px 0;
     border-right: 1px solid var(--borde);
+}
+
+.ajustar-panel-mapa {
+    position: absolute;
+    z-index: 505;
+    inset-block: 0;
+    inset-inline-start: var(--ancho-panel-actual);
+    width: 16px;
+    cursor: ew-resize;
+    touch-action: none;
+}
+.ajustar-panel-mapa::after {
+    content: "";
+    position: absolute;
+    inset: 50% auto auto 2px;
+    width: 5px;
+    height: 44px;
+    transform: translateY(-50%);
+    background: var(--verde);
+    border: 1px solid white;
+    border-radius: 6px;
+}
+.ajustar-panel-mapa:is(:hover, :focus-visible, :active)::after { outline: 2px solid #527b63; }
+.explorar.ajustando-panel-mapa { cursor: ew-resize; user-select: none; }
+
+@media (max-width: 700px) {
+    .ajustar-panel-mapa { display: none; }
 }
 
 .resumen { padding: 12px clamp(12px, 1.15vw, 22px) 8px; }
@@ -367,6 +400,7 @@ button:disabled { cursor: default; opacity: .62; }
         gap: 6px;
         overflow: visible;
     }
+    .categorias:has(> a:nth-child(9):last-child) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .categorias a {
         display: grid;
         place-items: center;
@@ -444,20 +478,63 @@ button:disabled { cursor: default; opacity: .62; }
 .grilla .tarjeta-direccion { grid-column: 1; grid-row: 2; }
 .grilla .tarjeta-resenas { grid-column: 2; grid-row: 2; }
 
+@container (max-width: 280px) {
+    .acciones-busqueda { flex-wrap: wrap; }
+    .acciones-busqueda .buscador { flex-basis: 100%; }
+    .lista .tarjeta-cuerpo { grid-template-columns: minmax(0, 1fr) auto; }
+    .lista .tarjeta-fotos { grid-column: 1 / -1; grid-row: 1; }
+    .lista .tarjeta-fotos img { aspect-ratio: 16 / 9; }
+    .lista .tarjeta-direccion { grid-column: 1; grid-row: 2; }
+    .lista .tarjeta-resenas { grid-column: 2; grid-row: 2; }
+    .lista .tarjeta-direccion:first-child,
+    .lista .tarjeta-direccion:first-child + .tarjeta-resenas { grid-row: 1; }
+}
+
+@container (min-width: 440px) {
+    .lista .tarjeta-con-galeria { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto; }
+    .lista .tarjeta-con-galeria > :is(.tarjeta-fotos, .tarjeta-direccion, .tarjeta-resenas) { grid-row: 1; }
+    .lista .tarjeta-con-galeria .tarjeta-fotos { grid-column: 1; }
+    .lista .tarjeta-con-galeria .tarjeta-direccion { grid-column: 2; }
+}
+
 html[data-texto="grande"] { font-size: 112.5%; }
 body:not([data-color-mode="estandar"]) .mapa-base-raster { filter: grayscale(1) contrast(.94); }
-.marcador-lugar {
+.pin-lugar {
     display: grid;
     place-items: center;
+    width: 100%;
+    height: 100%;
     background: #eaf5e8;
     border: 2px solid #315b42;
     border-radius: 50% 50% 50% 4px;
     box-shadow: 0 1px 4px #142a2366;
 }
 .marcador-lugar img { display: block; width: 20px; height: 20px; }
-body[data-color-mode="protanopia"] .marcador-lugar { border-color: #354f78; background: #fff2d4; }
-body[data-color-mode="deuteranopia"] .marcador-lugar { border-color: #58386b; background: #fff0d8; }
-body[data-color-mode="tritanopia"] .marcador-lugar { border-color: #843643; background: #effcf3; }
+.presencia-marcador {
+    padding: 2px;
+    border: 1px solid #aac0ae;
+    border-radius: 50%;
+    background: #fff;
+    object-fit: contain;
+}
+.presencia-marcador-propio { outline: 2px solid #28597b; outline-offset: 1px; }
+body[data-color-mode="protanopia"] .pin-lugar { border-color: #354f78; background: #fff2d4; }
+body[data-color-mode="deuteranopia"] .pin-lugar { border-color: #58386b; background: #fff0d8; }
+body[data-color-mode="tritanopia"] .pin-lugar { border-color: #843643; background: #effcf3; }
+
+@media (prefers-reduced-motion: no-preference) {
+    .marcador-lugar:is(:hover, :focus-visible, .marcador-lugar-activo) .pin-lugar {
+        transform-origin: 30% 95%;
+        animation: oscilar-pin-lugar 480ms ease-out both;
+    }
+}
+
+@keyframes oscilar-pin-lugar {
+    0%, 100% { transform: rotate(0); }
+    24% { transform: rotate(-13deg); }
+    49% { transform: rotate(10deg); }
+    73% { transform: rotate(-5deg); }
+}
 
 .actividades-turismo {
     display: flex;
@@ -487,17 +564,17 @@ body[data-color-mode="tritanopia"] .marcador-lugar { border-color: #843643; back
 .grilla-turismo .tarjeta-turismo > .acciones { align-self: stretch; justify-content: flex-end; }
 .sin-mapa-turismo { align-self: center; color: #475e50; font-size: .82rem; }
 
-.fotos-turismo, .foto-turismo-vacia {
+.fotos-lugar, .foto-turismo-vacia {
     display: grid;
     width: 100%;
     border-radius: 10px;
     overflow: hidden;
 }
-.fotos-turismo { grid-template-columns: repeat(auto-fit, minmax(min(125px, 100%), 1fr)); gap: 4px; }
-.fotos-turismo img { width: 100%; aspect-ratio: 2; object-fit: cover; }
+.fotos-lugar { position: relative; grid-template-columns: repeat(auto-fit, minmax(min(125px, 100%), 1fr)); gap: 4px; }
+.fotos-lugar img { width: 100%; aspect-ratio: 2; object-fit: cover; }
 .foto-turismo-vacia { aspect-ratio: 2; place-items: center; background: var(--claro); }
 .foto-turismo-vacia img { width: 36px; }
-.ficha-detalle :is(.fotos-turismo, .foto-turismo-vacia) { margin-block: 14px; }
+.ficha-detalle :is(.fotos-lugar, .foto-turismo-vacia) { max-width: 720px; margin-block: 14px; }
 
 .indicadores-turismo {
     display: flex;

@@ -18,13 +18,7 @@
         <p class="saldo-tienda">Saldo disponible <strong>{{ $points }}</strong> puntos</p>
     </div>
     @include('shop.mensajes')
-    @php
-        $canjeSolicitado = request()->query('canjear');
-        $dinosaurParaConfirmar = is_string($canjeSolicitado)
-            ? $dinosaurs->firstWhere('slug', $canjeSolicitado)
-            : null;
-    @endphp
-    @if ($dinosaurParaConfirmar && !in_array($dinosaurParaConfirmar->id, $ownedIds, true) && $points >= $dinosaurParaConfirmar->price)
+    @if ($dinosaurParaConfirmar)
         <section id="confirmar-canje" class="tienda-canje-alternativo" aria-labelledby="titulo-canje-alternativo" tabindex="-1">
             @include('shop.confirmar', ['producto' => $dinosaurParaConfirmar, 'esDialogo' => false, 'tituloCanje' => 'titulo-canje-alternativo'])
         </section>

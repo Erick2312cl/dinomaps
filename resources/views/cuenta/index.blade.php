@@ -14,10 +14,10 @@
             <h2>Mi perfil</h2>
             <div class="bloque-cuenta">
                 <div class="identidad-cuenta">
-                    <img src="{{ asset($equipped?->image_path ?? 'images/dinomaps/dino-3.webp') }}" alt="">
+                    <img src="{{ asset($profileAvatar) }}" alt="">
                     <div>
                         <strong>{{ $user->name }}</strong>
-                        <p>{{ $equipped?->name ?? 'Dino explorador' }}</p>
+                        <p>{{ $profileRank }}</p>
                     </div>
                 </div>
                 <div class="opcion-cuenta opcion-saldo">

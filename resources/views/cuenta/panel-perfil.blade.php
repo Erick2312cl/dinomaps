@@ -11,11 +11,10 @@
                 <h3 class="cuenta-apartado">Cuenta</h3>
                 <div class="perfil">
                     <div class="perfil-identidad">
-                        @php($dinoEquipado = auth()->user()->equippedDinosaur)
-                        <img src="{{ asset($dinoEquipado?->image_path ?? 'images/dinomaps/dino-3.webp') }}" alt="">
+                        <img src="{{ asset($profileAvatar) }}" alt="">
                         <div>
                             <strong>{{ auth()->user()->name }}</strong>
-                            <p>{{ $dinoEquipado?->name ?? 'Dino explorador' }}</p>
+                            <p>{{ $profileRank }}</p>
                         </div>
                     </div>
                     <p class="opcion-cuenta opcion-puntos"><strong>Puntos</strong><span>{{ auth()->user()->points }}</span></p>

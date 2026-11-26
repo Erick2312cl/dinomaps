@@ -1,6 +1,6 @@
 <h2 id="{{ $tituloCanje }}">Confirmar canje</h2>
 <div class="tienda-canje-resumen">
-    <div class="tienda-canje-arte">
+    <div class="tienda-arte tienda-canje-arte">
         <img data-canje-vista-imagen
              @if ($producto?->image_path) src="{{ asset($producto->image_path) }}" @else hidden @endif
              alt="">

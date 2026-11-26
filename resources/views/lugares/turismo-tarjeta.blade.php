@@ -1,5 +1,5 @@
 <article class="tarjeta tarjeta-turismo">
-    @include('lugares.turismo-fotos', ['soloPortadaTurismo' => true])
+    @include('lugares.fotos', ['soloPortada' => true])
     <small>{{ $lugar->actividad?->etiqueta() ?? $lugar->tipo }}</small>
     <div class="titulo-lugar">
         <h2>{{ $lugar->nombre }}</h2>

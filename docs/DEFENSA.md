@@ -2,7 +2,7 @@
 
 DinoMaps es un mapa urbano colaborativo de Neuquén capital. Permite encontrar lugares, consultar reseñas y ver avisos comunitarios sobre lo que pasa en las calles. Proyecto de Programación Web Dinámica de la UNCo.
 
-**Integrantes:** Erick Clavería. Completar con los nombres y apellidos de los demás integrantes antes de entregar.
+**Integrantes:** Erick Clavería, Martín Massimino, Bruno Carrera y Fernando Liozzi.
 
 ## Funcionalidades
 
@@ -55,4 +55,4 @@ El canje bloquea la fila del usuario dentro de una transacción. Consulta si ya 
 
 ## Entrega
 
-El [README](../README.md) explica cómo iniciar el proyecto y cargar el catálogo con migraciones y seeders. Completen los integrantes en este documento. La consigna pide subir a PEDCO el enlace del repositorio GitHub con el código, las migraciones, los seeders y esta documentación. Antes de enviarlo, comprueben desde otra cuenta que la cátedra pueda abrir el repositorio.
+El [README](../README.md) explica cómo iniciar el proyecto y cargar el catálogo con migraciones y seeders. La [documentación de entrega](entrega/README_ENTREGA.md) reúne los requisitos del punto 5.C. La consigna pide subir a PEDCO el enlace del repositorio GitHub con el código, las migraciones, los seeders y la documentación. Antes de enviarlo, comprueben desde otra cuenta que la cátedra pueda abrir el repositorio.

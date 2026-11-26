@@ -9,11 +9,16 @@
     <link rel="stylesheet" href="{{ asset('css/cuenta.css') }}">
     <script type="module" src="{{ asset('js/configuracion.js') }}"></script>
     <script type="module" src="{{ asset('js/color-mapa.js') }}"></script>
+    @auth
+        <script type="module" src="{{ asset('js/presencia.js') }}"></script>
+    @endauth
     @stack('head')
     <link rel="stylesheet" href="{{ asset('css/accesibilidad.css') }}">
     <link rel="stylesheet" href="{{ asset('css/tema.css') }}">
 </head>
-<body data-color-mode="{{ auth()->user()?->color_mode ?? 'estandar' }}" @auth data-color-cuenta @endauth>
+<body data-color-mode="{{ auth()->user()?->color_mode ?? 'estandar' }}"
+    @auth data-color-cuenta data-presencia-url="{{ route('presence.index') }}"
+        data-presencia-token="{{ csrf_token() }}" data-presencia-cuenta="{{ auth()->id() }}" @endauth>
     @unless (request()->routeIs('cuenta.index', 'cuenta.configuracion'))
         <header class="barra">
             <a class="marca" href="{{ route('inicio') }}" aria-label="DinoMaps">

@@ -49,7 +49,7 @@
         <section>
             <h2>Privacidad y sesión</h2>
             <div class="bloque-cuenta">
-                <p class="opcion-cuenta">Tu ubicación aproximada se comparte al elegir Compartir ubicación en el mapa. Podés dejar de compartirla desde el mismo botón. El permiso del dispositivo se administra en el navegador.</p>
+                <p class="opcion-cuenta">Al elegir Compartir nombre y ubicación, otros usuarios cercanos que también comparten pueden ver tu nombre de perfil y tu ubicación aproximada. Podés dejar de compartir desde el mismo botón. El permiso del dispositivo se administra en el navegador.</p>
                 @auth
                     <a class="opcion-cuenta" href="{{ route('cuenta.index') }}"><strong>Mi cuenta</strong><span>›</span></a>
                     <form method="post" action="{{ route('logout') }}">

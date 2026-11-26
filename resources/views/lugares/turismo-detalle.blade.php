@@ -9,7 +9,7 @@
             <button class="boton boton-claro" autofocus>Cerrar</button>
         </form>
     </div>
-    @include('lugares.turismo-fotos')
+    @include('lugares.fotos')
     <p>{{ $lugar->direccion }}</p>
     @if ($lugar->descripcion)
         <p>{{ $lugar->descripcion }}</p>

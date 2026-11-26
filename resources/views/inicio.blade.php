@@ -15,6 +15,7 @@
 }
 </script>
 <script type="module" src="{{ asset('js/mapa.js') }}"></script>
+<script type="module" src="{{ asset('js/panel-mapa.js') }}"></script>
 @if (($filtros['categoria'] ?? null) === 'turismo' && !isset($destino))
     <script type="module" src="{{ asset('js/turismo.js') }}"></script>
 @endif
@@ -33,8 +34,8 @@
             @endunless
             <span id="estado-mapa" role="status"></span>
             @auth
-                <button id="presencia-cercana" type="button" aria-pressed="false" title="Compartí tu ubicación aproximada para ver otros usuarios cercanos"
-                    data-url="{{ route('presence.index') }}" data-token="{{ csrf_token() }}" disabled>Compartir ubicación</button>
+                <button id="presencia-cercana" type="button" aria-pressed="false" title="Otros usuarios cercanos que también comparten podrán ver tu nombre de perfil y tu ubicación aproximada"
+                    disabled>Compartir nombre y ubicación</button>
                 <span id="estado-presencia" role="status"></span>
             @endauth
         </div>
@@ -82,6 +83,8 @@
             </div>
         @endif
     </aside>
+    <div id="ajustar-panel-mapa" class="ajustar-panel-mapa" role="separator" aria-orientation="vertical"
+        aria-label="Ancho del panel lateral" aria-controls="resultados-mapa" tabindex="0" hidden></div>
     <div class="accesos-mapa" aria-label="Accesos del mapa">
         <button id="mi-ubicacion" type="button" title="Mi ubicación" aria-label="Mi ubicación" disabled>
             <img src="{{ asset('images/dinomaps/centrar.svg') }}" alt="">
